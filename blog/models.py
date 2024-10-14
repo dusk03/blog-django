@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -9,8 +10,6 @@ class PublishedManager(models.Manager):
             super().get_queryset().filter(status=Post.Status.PUBLISHED)
         )
         
-    
-
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
@@ -53,6 +52,8 @@ class Post(models.Model):
                 self.slug
             ]
         )
+    tags = TaggableManager()
+    
         
 class Comment(models.Model):
     post = models.ForeignKey(
@@ -74,3 +75,4 @@ class Comment(models.Model):
         ]
     def __str__(self):
         return f'Comment by {self.name} on {self.post}'
+
